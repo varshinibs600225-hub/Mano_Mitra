@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin'
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'manomitra-admin'
-
 export async function POST(request: NextRequest) {
+  const adminUsername = process.env.ADMIN_USERNAME
+  const adminPassword = process.env.ADMIN_PASSWORD
+
+  if (!adminUsername || !adminPassword) {
+    return NextResponse.json({ error: 'Admin login is not configured' }, { status: 503 })
+  }
+
   const { username, password } = await request.json()
 
-  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+  if (username !== adminUsername || password !== adminPassword) {
     return NextResponse.json({ error: 'Invalid admin credentials' }, { status: 401 })
   }
 

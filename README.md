@@ -36,11 +36,11 @@ This app uses PostgreSQL in production. Create a PostgreSQL database (for exampl
 In Vercel, add these server-side environment variables under **Project Settings → Environment Variables**:
 
 - `DATABASE_URL`: pooled PostgreSQL connection URL for application traffic.
-- `DIRECT_URL`: direct, non-pooled PostgreSQL connection URL for Prisma migrations.
+- `PRISMA_DATABASE_URL`: direct PostgreSQL connection URL for Prisma migrations (provided by the Vercel Prisma Postgres integration).
 - `GEMINI_API_KEY`: Gemini API key (optional; chatbot requests need it).
 - `ADMIN_USERNAME` and `ADMIN_PASSWORD`: set both to private, strong credentials.
 
-Set Vercel's **Build Command** to `npx prisma migrate deploy && npm run build`. The checked-in migration creates the initial database schema. Redeploy after setting the variables. Keep these secrets out of Git and do not prefix them with `NEXT_PUBLIC_`.
+The production build runs `prisma migrate deploy` before building, applying the checked-in schema migration automatically. Keep database URLs and secrets out of Git and do not prefix them with `NEXT_PUBLIC_`.
 
 The local SQLite database is not automatically copied to PostgreSQL. The deployed database starts with the schema only; run the seed script against it only if you want demo data.
 
