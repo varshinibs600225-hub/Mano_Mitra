@@ -24,7 +24,14 @@ export default function AdminLoginPage() {
       })
 
       if (!response.ok) {
-        setError('Invalid admin credentials.')
+        const result = await response.json().catch(() => null)
+        if (response.status === 503) {
+          setError('Admin sign-in is not configured. Add ADMIN_USERNAME and ADMIN_PASSWORD in Vercel Project Settings → Environment Variables, then redeploy.')
+        } else if (response.status === 401) {
+          setError('Invalid admin credentials.')
+        } else {
+          setError(result?.error || 'Unable to sign in. Please try again.')
+        }
         return
       }
 
